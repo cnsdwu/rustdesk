@@ -79,6 +79,18 @@ fn install_android_deps() {
 
 fn main() {
     hbb_common::gen_version();
+    println!("cargo:rerun-if-env-changed=RENDEZVOUS_SERVER");
+    println!("cargo:rerun-if-env-changed=RS_PUB_KEY");
+    println!("cargo:rerun-if-env-changed=RELAY_SERVER");
+    if let Ok(v) = std::env::var("RENDEZVOUS_SERVER") {
+        println!("cargo:rustc-env=RENDEZVOUS_SERVER={}", v);
+    }
+    if let Ok(v) = std::env::var("RS_PUB_KEY") {
+        println!("cargo:rustc-env=RS_PUB_KEY={}", v);
+    }
+    if let Ok(v) = std::env::var("RELAY_SERVER") {
+        println!("cargo:rustc-env=RELAY_SERVER={}", v);
+    }
     install_android_deps();
     #[cfg(all(windows, feature = "inline"))]
     build_manifest();

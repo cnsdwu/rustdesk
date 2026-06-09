@@ -187,6 +187,10 @@ jobs:
           rustc -V
 
       - name: Build rustdesk
+        env:
+          RENDEZVOUS_SERVER: ${{ secrets.RENDEZVOUS_SERVER }}
+          RS_PUB_KEY: ${{ secrets.RS_PUB_KEY }}
+          RELAY_SERVER: ${{ secrets.RELAY_SERVER }}
         run: |
           ./build.py --flutter ${{ matrix.job.extra-build-args }}
 

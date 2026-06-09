@@ -1038,6 +1038,11 @@ pub fn get_custom_rendezvous_server(custom: String) -> String {
     if !custom.is_empty() {
         return custom;
     }
+    if let Some(server) = option_env!("RENDEZVOUS_SERVER") {
+        if !server.is_empty() {
+            return server.to_owned();
+        }
+    }
     if !config::PROD_RENDEZVOUS_SERVER.read().unwrap().is_empty() {
         return config::PROD_RENDEZVOUS_SERVER.read().unwrap().clone();
     }
@@ -1819,7 +1824,10 @@ pub async fn get_key(sync: bool) -> String {
         options.remove("key").unwrap_or_default()
     };
     if key.is_empty() {
-        key = config::RS_PUB_KEY.to_owned();
+        key = option_env!("RS_PUB_KEY")
+            .filter(|v| !v.is_empty())
+            .unwrap_or(config::RS_PUB_KEY)
+            .to_owned();
     }
     key
 }
